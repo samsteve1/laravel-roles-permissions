@@ -10,11 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\Models\Role;
+use App\Models\Permission;
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $user = $request->user();
-
-    dd($user->can('edit posts'));
+  dd($user->can('delete posts'));
 });
 
 Auth::routes();
