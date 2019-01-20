@@ -14,7 +14,7 @@ use App\Models\Role;
 use App\Models\Permission;
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $user = $request->user();
-  dd($user->can('delete posts'));
+    $user->withdrawPermissionTo(['delete posts', 'edit posts']);
 });
 
 Auth::routes();

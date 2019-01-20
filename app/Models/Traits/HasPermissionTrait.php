@@ -4,14 +4,36 @@ namespace App\Models\Traits;
 use App\Models\{Role, Permission};
 trait HasPermissionTrait
 {
+  public function givePermissionsTo(...$permissions)
+  {
+    $permissions = $this->getAllPermissions(array_flatten($permissions));
+
+    if ($permissions === null) {
+      return $this;
+    }
+    $this->permissions()->saveMany($permissions);
+
+    return $this;
+  }
+
+  public function withdrawPermissionTo(...$permissions)
+  {
+    $permissions = $this->getAllPermissions(array_flatten($permissions));
+
+    $this->permissions()->detach($permissions);
+
+    return $this;
+  }
   public function hasPermissionTo($permission)
   {
     return $this->hasPermissionThroughRole($permission)|| $this->hasPermission($permission);
   }
+
   public function hasPermission($permission)
   {
     return (bool) $this->permissions->where('name', $permission->name)->count();
   }
+
   public function hasPermissionThroughRole($permission)
   {
     foreach ($permission->roles as $role) {
@@ -39,5 +61,9 @@ trait HasPermissionTrait
   public function permissions()
   {
     return $this->belongsToMany(Permission::class, 'users_permissions');
+  }
+  protected function getAllPermissions(array $permissions)
+  {
+    return Permission::whereIn('name', $permissions)->get();
   }
 }

@@ -15,6 +15,9 @@
                     @endif
 
                     You are logged in!
+                    @can ('edit posts')
+                      <a href="#">Edit posts</a>
+                    @endcan
                 </div>
             </div>
         </div>
